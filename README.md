@@ -4,6 +4,8 @@ http://adventofcode.com/
 
 ## Running
 
+Requires JDK 17
+
 ```
 mvn clean test
 ```

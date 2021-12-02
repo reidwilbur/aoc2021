@@ -7,12 +7,9 @@ import org.junit.jupiter.api.Test;
 
 public class Day1Test {
 
-  private static final int[] PUZZLE_INPUT = Input.loadInts();
+  private static final int[] PUZZLE_INPUT = Input.PUZZLE.loadInts();
 
-  private static final int[] TEST_INPUT =
-      new int[] {
-        199, 200, 208, 210, 200, 207, 240, 269, 260, 263,
-      };
+  private static final int[] TEST_INPUT = Input.TEST.loadInts();
 
   @Test
   void testGetIncCount_testInput() {

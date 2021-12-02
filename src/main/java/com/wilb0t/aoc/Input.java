@@ -13,16 +13,25 @@ import java.util.stream.Collectors;
 
 public class Input {
 
-  static URI getInputUri(Class<?> caller) throws URISyntaxException {
-    var path = "/" + caller.getName().replace('.', '/').replace("Test", "") + ".txt";
+  public static Input PUZZLE = new Input("");
+  public static Input TEST = new Input("-test");
+  private final String suffix;
+
+  private Input(String suffix) {
+    this.suffix = suffix;
+  }
+
+  static URI getInputUri(Class<?> caller, String suffix) throws URISyntaxException {
+    var path = "/" + caller.getName().replace('.', '/').replace("Test", "") + suffix + ".txt";
     return Objects.requireNonNull(Input.class.getResource(path)).toURI();
   }
 
-  public static int[] loadInts() {
+  public int[] loadInts() {
     try {
       var caller =
           StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
-      return Files.readAllLines(Path.of(getInputUri(caller)), StandardCharsets.UTF_8).stream()
+      return Files.readAllLines(Path.of(getInputUri(caller, suffix)), StandardCharsets.UTF_8)
+          .stream()
           .mapToInt(Integer::parseInt)
           .toArray();
     } catch (IOException | URISyntaxException e) {
@@ -30,22 +39,23 @@ public class Input {
     }
   }
 
-  public static String[] loadStrings() {
+  public String[] loadStrings() {
     try {
       var caller =
           StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
-      return Files.readAllLines(Path.of(getInputUri(caller)), StandardCharsets.UTF_8)
+      return Files.readAllLines(Path.of(getInputUri(caller, suffix)), StandardCharsets.UTF_8)
           .toArray(String[]::new);
     } catch (IOException | URISyntaxException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public static <T> List<T> load(Function<String, T> mapper) {
+  public <T> List<T> load(Function<String, T> mapper) {
     try {
       var caller =
           StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
-      return Files.readAllLines(Path.of(getInputUri(caller)), StandardCharsets.UTF_8).stream()
+      return Files.readAllLines(Path.of(getInputUri(caller, suffix)), StandardCharsets.UTF_8)
+          .stream()
           .map(mapper)
           .collect(Collectors.toList());
     } catch (IOException | URISyntaxException e) {
