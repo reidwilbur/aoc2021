@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 
 public class Day2Test {
 
-  private static final List<Day2.Command> PUZZLE_INPUT = Input.PUZZLE.load(Day2.INPUT_MAPPER);
+  private static final List<Day2.Command> PUZZLE_INPUT = Input.PUZZLE.load(Day2.Command::parse);
 
-  private static final List<Day2.Command> TEST_INPUT = Input.TEST.load(Day2.INPUT_MAPPER);
+  private static final List<Day2.Command> TEST_INPUT = Input.TEST.load(Day2.Command::parse);
 
   @Test
   void testGetDistMult_testInput() {

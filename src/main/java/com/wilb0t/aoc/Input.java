@@ -1,7 +1,6 @@
 package com.wilb0t.aoc;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Input {
 
@@ -21,19 +21,17 @@ public class Input {
     this.suffix = suffix;
   }
 
-  static URI getInputUri(Class<?> caller, String suffix) throws URISyntaxException {
-    var path = "/" + caller.getName().replace('.', '/').replace("Test", "") + suffix + ".txt";
-    return Objects.requireNonNull(Input.class.getResource(path)).toURI();
+  Stream<String> getInput(Class<?> caller) throws URISyntaxException, IOException {
+    var pathStr = "/" + caller.getName().replace('.', '/').replace("Test", "") + suffix + ".txt";
+    var path = Path.of(Objects.requireNonNull(Input.class.getResource(pathStr)).toURI());
+    return Files.readAllLines(path, StandardCharsets.UTF_8).stream();
   }
 
   public int[] loadInts() {
     try {
       var caller =
           StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
-      return Files.readAllLines(Path.of(getInputUri(caller, suffix)), StandardCharsets.UTF_8)
-          .stream()
-          .mapToInt(Integer::parseInt)
-          .toArray();
+      return getInput(caller).mapToInt(Integer::parseInt).toArray();
     } catch (IOException | URISyntaxException e) {
       throw new RuntimeException(e);
     }
@@ -43,8 +41,7 @@ public class Input {
     try {
       var caller =
           StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
-      return Files.readAllLines(Path.of(getInputUri(caller, suffix)), StandardCharsets.UTF_8)
-          .toArray(String[]::new);
+      return getInput(caller).toArray(String[]::new);
     } catch (IOException | URISyntaxException e) {
       throw new RuntimeException(e);
     }
@@ -54,10 +51,7 @@ public class Input {
     try {
       var caller =
           StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
-      return Files.readAllLines(Path.of(getInputUri(caller, suffix)), StandardCharsets.UTF_8)
-          .stream()
-          .map(mapper)
-          .collect(Collectors.toList());
+      return getInput(caller).map(mapper).collect(Collectors.toList());
     } catch (IOException | URISyntaxException e) {
       throw new RuntimeException(e);
     }
