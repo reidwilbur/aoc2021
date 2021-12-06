@@ -7,7 +7,7 @@ public class Day3 {
 
   @FunctionalInterface
   public interface BitCrit {
-    boolean test(Integer ones, Integer zeros, Character bit);
+    boolean test(int ones, int zeros, char bit);
   }
 
   public static int getPowerCons(String[] report) {
