@@ -56,4 +56,14 @@ public class Input {
       throw new RuntimeException(e);
     }
   }
+  
+  public <T> List<T> loadFlat(Function<String, Stream<T>> mapper) {
+    try {
+      var caller =
+          StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
+      return getInput(caller).flatMap(mapper).collect(Collectors.toList());
+    } catch (IOException | URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
