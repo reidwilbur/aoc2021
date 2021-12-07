@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -32,6 +33,16 @@ public class Input {
       var caller =
           StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
       return getInput(caller).mapToInt(Integer::parseInt).toArray();
+    } catch (IOException | URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  public int[] loadIntsFlat() {
+    try {
+      var caller =
+          StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
+      return getInput(caller).flatMap(s -> Arrays.stream(s.split(","))).mapToInt(Integer::parseInt).toArray();
     } catch (IOException | URISyntaxException e) {
       throw new RuntimeException(e);
     }
