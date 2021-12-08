@@ -36,55 +36,45 @@ public class Day8 {
   }
   
   static int decodeOutput(Patterns patterns) {
-    var grouped = 
+    var lenToPats = 
         patterns.inputs().stream().collect(Collectors.groupingBy(Set::size));
     
-    var digToPat = new HashMap<String, Set<Character>>();
-    digToPat.put("1", grouped.get(2).get(0));
-    digToPat.put("4", grouped.get(4).get(0));
-    digToPat.put("7", grouped.get(3).get(0));
-    digToPat.put("8",grouped.get(7).get(0));
+    var patToDigit = new HashMap<Set<Character>, String>();
+    patToDigit.put(lenToPats.get(2).get(0), "1");
+    patToDigit.put(lenToPats.get(4).get(0), "4");
+    patToDigit.put(lenToPats.get(3).get(0), "7");
+    patToDigit.put(lenToPats.get(7).get(0), "8");
+    var four = lenToPats.get(4).get(0);
+    var seven = lenToPats.get(3).get(0);
     
-    for (var pattern : grouped.get(5)) {
-      var cmpSeven = intersect(pattern, digToPat.get("7"));
-      var cmpFour = intersect(pattern, digToPat.get("4"));
-      var dig = "";
-      if (cmpFour == 2 && cmpSeven == 2) {
-        dig = "2";
-      } else if (cmpFour == 3 && cmpSeven == 3) {
-        dig = "3";
-      } else if (cmpFour == 3 && cmpSeven == 2) {
-        dig = "5";
-      } else {
-        throw new RuntimeException("Unable to decode pattern " + pattern);
-      }
-      digToPat.put(dig, pattern);
+    for (var pattern : lenToPats.get(5)) {
+      var cmpSeven = intersect(pattern, seven);
+      var cmpFour = intersect(pattern, four);
+      
+      var digit =
+          (cmpFour == 2 && cmpSeven == 2) 
+              ? "2" 
+              : (cmpFour == 3 && cmpSeven == 3) 
+                  ? "3" 
+                  : "5";
+      patToDigit.put(pattern, digit);
     }
     
-    for (var pattern : grouped.get(6)) {
-      var cmpSeven = intersect(pattern, digToPat.get("7"));
-      var cmpFour = intersect(pattern, digToPat.get("4"));
-      var dig = "";
-      if (cmpFour == 3 && cmpSeven == 3) {
-        dig = "0";
-      } else if (cmpFour == 3 && cmpSeven == 2) {
-        dig = "6";
-      } else if (cmpFour == 4 && cmpSeven == 3) {
-        dig = "9";
-      } else {
-        throw new RuntimeException("Unable to decode pattern " + pattern);
-      }
-      digToPat.put(dig, pattern);
+    for (var pattern : lenToPats.get(6)) {
+      var cmpSeven = intersect(pattern, seven);
+      var cmpFour = intersect(pattern, four);
+      var digit =
+          (cmpFour == 3 && cmpSeven == 3) 
+              ? "0"
+              : (cmpFour == 3 && cmpSeven == 2) 
+                  ? "6" 
+                  : "9";
+      patToDigit.put(pattern, digit);
     }
 
     return Integer.parseInt(
         patterns.outputs().stream()
-            .map(pattern -> 
-                digToPat.entrySet().stream()
-                    .filter(e -> e.getValue().equals(pattern))
-                    .findFirst()
-                    .orElseThrow()
-                    .getKey())
+            .map(patToDigit::get)
             .collect(Collectors.joining("")));
   }
   
