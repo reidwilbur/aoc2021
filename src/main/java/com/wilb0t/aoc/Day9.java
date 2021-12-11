@@ -2,25 +2,12 @@ package com.wilb0t.aoc;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Day9 {
-  
-  public static int[][] load(String[] lines) {
-    var map = new int[lines.length][lines[0].length()];
-    
-    for (var r = 0; r < lines.length; r++) {
-      for (var c = 0; c < lines[0].length(); c++) {
-        map[r][c] = lines[r].charAt(c) - '0';
-      }
-    }
-    
-    return map;
-  }
   
   public record Point(int r, int c) {
     public List<Point> nbors(int maxr, int maxc) {
@@ -60,14 +47,9 @@ public class Day9 {
     return risk;
   }
   
-  public static int calcBasins(int[][] input) {
-    var maxr = input.length;
-    var maxc = input[0].length;
-    
-    var heights = new int[input.length][];
-    for (var r = 0; r < maxr; r++) {
-      heights[r] = Arrays.copyOf(input[r], maxc);
-    }
+  public static int calcBasins(int[][] heights) {
+    var maxr = heights.length;
+    var maxc = heights[0].length;
     
     var queue = new ArrayDeque<Point>();
     var basinSizes = new ArrayList<Integer>();

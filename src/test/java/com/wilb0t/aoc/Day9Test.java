@@ -8,27 +8,27 @@ import org.junit.jupiter.api.Test;
 
 public class Day9Test {
 
-  private static final int[][] PUZZLE_INPUT = Day9.load(Input.PUZZLE.loadStrings());
+  private static final int[][] PUZZLE_INPUT = Input.PUZZLE.loadIntGrid();
 
-  private static final int[][] TEST_INPUT = Day9.load(Input.TEST.loadStrings());
+  private static final int[][] TEST_INPUT = Input.TEST.loadIntGrid();
 
   @Test
   void testCalcRisk_testInput() {
-    assertThat(Day9.calcRisk(TEST_INPUT), is(15));
+    assertThat(Day9.calcRisk(Input.copy(TEST_INPUT)), is(15));
   }
 
   @Test
   void testCalcRisk_puzzleInput() {
-    assertThat(Day9.calcRisk(PUZZLE_INPUT), is(580));
+    assertThat(Day9.calcRisk(Input.copy(PUZZLE_INPUT)), is(580));
   }
   
   @Test
   void testCalcBasins_testInput() {
-    assertThat(Day9.calcBasins(TEST_INPUT), is(1134));
+    assertThat(Day9.calcBasins(Input.copy(TEST_INPUT)), is(1134));
   }
 
   @Test
   void testCalcBasins_puzzleInput() {
-    assertThat(Day9.calcBasins(PUZZLE_INPUT), is(856716));
+    assertThat(Day9.calcBasins(Input.copy(PUZZLE_INPUT)), is(856716));
   }
 }

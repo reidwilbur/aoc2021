@@ -38,6 +38,24 @@ public class Input {
     }
   }
   
+  public int[][] loadIntGrid() {
+    try {
+      var caller =
+          StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
+      return getInput(caller).map(s -> s.chars().map(i -> i - '0').toArray()).toArray(int[][]::new);
+    } catch (IOException | URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  public static int[][] copy(int[][] input) {
+    var copy = new int[input.length][];
+    for (var r = 0; r < input.length; r++) {
+      copy[r] = Arrays.copyOf(input[r], input[r].length);
+    }
+    return copy;
+  }
+  
   public int[] loadIntsFlat() {
     try {
       var caller =
