@@ -1,6 +1,5 @@
 package com.wilb0t.aoc;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -96,7 +95,7 @@ public class Day13 {
             .collect(Collectors.toList());
     
     for (var dot : dots) {
-      buffer.get(dot.y).setCharAt(dot.x, '#');
+      buffer.get(dot.y).setCharAt(dot.x, '█');
     }
     
     return String.join("\n", buffer);
