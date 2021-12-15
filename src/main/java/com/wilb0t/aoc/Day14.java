@@ -2,7 +2,6 @@ package com.wilb0t.aoc;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Day14 {
   
@@ -23,7 +22,7 @@ public class Day14 {
     var tmplLen = puzzle.template.length();
     for (var idx = 0; idx < tmplLen - 1; idx++) {
       var pair = puzzle.template.substring(idx, idx + 2);
-      var pairCount = getElementCounts(pair, puzzle.rules, 0, steps, cache);
+      var pairCount = getElementCounts(pair, puzzle.rules, steps, cache);
       for (var entry : pairCount.entrySet()) {
         counts.merge(entry.getKey(), entry.getValue(), Long::sum);
       }
@@ -41,9 +40,8 @@ public class Day14 {
       String pair, 
       Map<String, Character> rules, 
       int step, 
-      int steps, 
       Map<String, Map<Character, Long>> cache) {
-    if (step == steps || !rules.containsKey(pair)) {
+    if (step == 0 || !rules.containsKey(pair)) {
       if (pair.charAt(0) == pair.charAt(1)) {
         return Map.of(pair.charAt(0), 2L);
       }
@@ -56,9 +54,9 @@ public class Day14 {
     var middle = rules.get(pair);
     var ltPair = String.valueOf(pair.charAt(0)) + middle;
     var rtPair = String.valueOf(middle) + pair.charAt(1);
-    var ltCounts = new HashMap<>(getElementCounts(ltPair, rules, step + 1, steps, cache));
+    var ltCounts = new HashMap<>(getElementCounts(ltPair, rules, step - 1, cache));
     ltCounts.put(middle, ltCounts.get(middle) - 1);
-    var rtCounts = getElementCounts(rtPair, rules, step + 1, steps, cache);
+    var rtCounts = getElementCounts(rtPair, rules, step - 1, cache);
     for (var entry : rtCounts.entrySet()) {
       ltCounts.merge(entry.getKey(), entry.getValue(), Long::sum);
     }
