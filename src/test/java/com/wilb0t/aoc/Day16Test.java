@@ -10,12 +10,10 @@ public class Day16Test {
 
   private static final String PUZZLE_INPUT = Input.PUZZLE.loadStrings()[0];
 
-  //private static final String TEST_INPUT = Input.TEST.loadStrings()[0];
-
   @Test
   void testLitValParse() {
     var packet = Day16.LitVal.parse("110100101111111000101000", 0);
-    var exp = new Day16.LitVal("110", "100", "011111100101", 21);
+    var exp = new Day16.LitVal(6, 4, 2021L, 21);
     assertThat(packet, is(exp));
   }
   
@@ -23,11 +21,11 @@ public class Day16Test {
   void testOpParse_lenid0() {
     var packet = Day16.Op.parse("00111000000000000110111101000101001010010001001000000000", 0);
     var exp = new Day16.Op(
-        "001",
-        "110",
+        1,
+        6,
         List.of(
-            new Day16.LitVal("110", "100", "1010", 11),
-            new Day16.LitVal("010", "100", "00010100", 16)
+            new Day16.LitVal(6, 4, 10L, 11),
+            new Day16.LitVal(2, 4, 20L, 16)
         ),
         49);
     assertThat(packet, is(exp));
@@ -37,12 +35,12 @@ public class Day16Test {
   void testOpParse_lenid1() {
     var packet = Day16.Op.parse("11101110000000001101010000001100100000100011000001100000", 0);
     var exp = new Day16.Op(
-        "111",
-        "011",
+        7,
+        3,
         List.of(
-            new Day16.LitVal("010", "100", "0001", 11),
-            new Day16.LitVal("100", "100", "0010", 11),
-            new Day16.LitVal("001", "100", "0011", 11)
+            new Day16.LitVal(2, 4, 1L, 11),
+            new Day16.LitVal(4, 4, 2L, 11),
+            new Day16.LitVal(1, 4, 3L, 11)
         ),
         51);
     assertThat(packet, is(exp));
@@ -64,5 +62,22 @@ public class Day16Test {
   @Test
   void testGetVersionNumSum_puzzleInput() {
     assertThat(Day16.getVersionNumSum(PUZZLE_INPUT), is(889));
+  }
+  
+  @Test
+  void testGetPacketValue_testInput() {
+    assertThat(Day16.getPacketValue("C200B40A82"), is(3L));
+    assertThat(Day16.getPacketValue("04005AC33890"), is(54L));
+    assertThat(Day16.getPacketValue("880086C3E88112"), is(7L));
+    assertThat(Day16.getPacketValue("CE00C43D881120"), is(9L));
+    assertThat(Day16.getPacketValue("D8005AC2A8F0"), is(1L));
+    assertThat(Day16.getPacketValue("F600BC2D8F"), is(0L));
+    assertThat(Day16.getPacketValue("9C005AC2F8F0"), is(0L));
+    assertThat(Day16.getPacketValue("9C0141080250320F1802104A08"), is(1L));
+  }
+  
+  @Test
+  void testGetPacketValue_puzzleInput() {
+    assertThat(Day16.getPacketValue(PUZZLE_INPUT), is(739303923668L));
   }
 }
