@@ -61,7 +61,7 @@ public class Day15 {
   static List<Integer> getNbors(int idx, int rows, int cols) {
     var nbors = new ArrayList<Integer>(4);
     var rowminidx = (idx / rows) * cols;
-    var rowmaxids = rowminidx + cols;
+    var rowmaxidx = rowminidx + cols;
     
     var upidx = idx - cols;
     var dnidx = idx + cols;
@@ -72,9 +72,9 @@ public class Day15 {
       nbors.add(upidx);
     }
     if (dnidx < rows * cols) {
-      nbors.add(idx + cols);
+      nbors.add(dnidx);
     }
-    if (rtidx < rowmaxids) {
+    if (rtidx < rowmaxidx) {
       nbors.add(rtidx);
     }
     if (ltidx >= rowminidx) {
