@@ -100,42 +100,49 @@ public class Day16 {
       var typeid = input.substring(offset + 3, offset + 6);
       var lentypeid = input.charAt(offset + 6) - '0';
       
-      var subpackets = new ArrayList<Packet>();
-      
       if (lentypeid == 0) {
-        var subpackLen = Integer.parseInt(input.substring(offset + 7, offset + 7 + 15), 2);
-        var parsedLen = 0;
-        var subpackStart = offset + 7 + 15;
-        
-        while (parsedLen < subpackLen) {
-          var packet = Packet.parse(input, subpackStart + parsedLen);
-          subpackets.add(packet);
-          parsedLen += packet.length();
-        }
+        var subpacklen = Integer.parseInt(input.substring(offset + 7, offset + 7 + 15), 2);
+        var packets = parsePacketsByLen(input, offset + 7 + 15, subpacklen);
         return new Op(
             Integer.parseInt(version, 2), 
             Integer.parseInt(typeid, 2), 
-            subpackets, 
-            subpackStart - offset + parsedLen);
+            packets, 
+            6 + 1 + 15 + subpacklen);
       } else {
         var subpackCount = Integer.parseInt(input.substring(offset + 7, offset + 7 + 11), 2);
-        var subpackofs = offset + 7 + 11;
-        
-        while (subpackCount > 0) {
-          var packet = Packet.parse(input, subpackofs);
-          subpackets.add(packet);
-          subpackCount -= 1;
-          subpackofs += packet.length();
-        }
+        var packets = parsePacketsByCount(input, offset + 7 + 11, subpackCount);
+        var sublen = packets.stream().mapToInt(Packet::length).sum();
         return new Op(
             Integer.parseInt(version, 2), 
             Integer.parseInt(typeid, 2), 
-            subpackets, 
-            subpackofs - offset);
+            packets, 
+            6 + 1 + 11 + sublen);
       }
-    }    
+    }
+    
+    static List<Packet> parsePacketsByLen(String input, int offset, int subpacklen) {
+      var parsedlen = 0;
+      var subpackets = new ArrayList<Packet>();
+      while (parsedlen < subpacklen) {
+        var packet = Packet.parse(input, offset + parsedlen);
+        subpackets.add(packet);
+        parsedlen += packet.length();
+      }
+      return subpackets;
+    }
+    
+    static List<Packet> parsePacketsByCount(String input, int offset, int count) {
+      var subpackets = new ArrayList<Packet>();
+      while (count > 0) {
+        var packet = Packet.parse(input, offset);
+        subpackets.add(packet);
+        count -= 1;
+        offset += packet.length();
+      }
+      return subpackets;
+    }
   }
-  
+
   public static int getVersionNumSum(String input) {
     var bits = toBin(input);
     var packet = Packet.parse(bits, 0);
